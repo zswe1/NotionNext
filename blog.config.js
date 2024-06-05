@@ -26,7 +26,7 @@ const BLOG = {
 
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || 'zcosmos', // 您的昵称 例如 tangly1024
   BIO: process.env.NEXT_PUBLIC_BIO || '苦苦挣扎，初出茅庐，与自己家庭社会思考斗争的毛头小子', // 作者简介
-  LINK: process.env.NEXT_PUBLIC_LINK || 'z-qiankun.eu.org', // 网站地址
+  LINK: process.env.NEXT_PUBLIC_LINK || 'https://z-qiankun.eu.org', // 网站地址
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || 'Notion, 博客', // 网站关键词 英文逗号隔开
 
   // 社交链接，不需要可留空白，例如 CONTACT_WEIBO:''
