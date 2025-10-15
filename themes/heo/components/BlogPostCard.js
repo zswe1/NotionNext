@@ -28,73 +28,212 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
   return (
     <article className={`${COVER_HOVER_ENLARGE ? 'hover:transition-all duration-150' : ''}`}>
-      <div
-        data-wow-delay='.2s'
-        className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] flex mb-4 group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors justify-between overflow-hidden rounded-xl
-        flex-row h-32 lg:flex-col lg:h-52 xl:flex-col xl:h-96'>
-        
-        {/* 图片封面 */}
-        {showPageCover && (
-          <SmartLink href={post?.href} passHref legacyBehavior>
-            <div className='w-32 lg:w-full lg:h-1/2 xl:w-full xl:h-1/2 overflow-hidden cursor-pointer select-none flex-shrink-0'>
-              <LazyImage
-                priority={index === 0}
-                src={post?.pageCoverThumbnail}
-                alt={post?.title}
-                className='h-full w-full object-cover group-hover:scale-105 group-hover:brightness-75 transition-all duration-500 ease-in-out'
-              />
-            </div>
-          </SmartLink>
-        )}
-
-        {/* 文字区块 */}
-        <div className='flex p-4 lg:p-6 flex-col justify-between flex-1 lg:h-1/2 xl:h-1/2'>
-          <header>
-            {/* 分类 */}
-            {post?.category && (
-              <div className='flex mb-1 items-center justify-start flex-wrap text-gray-600 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-yellow-500'>
-                <SmartLink
-                  passHref
-                  href={`/category/${post.category}`}
-                  className='cursor-pointer text-xs font-normal menu-link'>
-                  {post.category}
-                </SmartLink>
+      
+      {/* 单列布局：Overlay文字浮空效果 - 只在小屏幕显示 */}
+      <div className='lg:hidden'>
+        <SmartLink href={post?.href} passHref legacyBehavior>
+          <div
+            data-wow-delay='.2s'
+            className='relative wow fadeInUp border dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl cursor-pointer h-80 mb-4 group'>
+            
+            {/* 背景图片层 */}
+            {showPageCover && (
+              <div className='absolute inset-0 w-full h-full'>
+                <LazyImage
+                  priority={index === 0}
+                  src={post?.pageCoverThumbnail}
+                  alt={post?.title}
+                  className='h-full w-full object-cover group-hover:scale-110 transition-all duration-700 ease-out'
+                />
+                {/* 渐变遮罩层 */}
+                <div className='absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent'></div>
               </div>
             )}
 
-            {/* 标题和图标 */}
-            <SmartLink
-              href={post?.href}
-              passHref
-              className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 cursor-pointer font-extrabold leading-tight
-              text-base lg:text-xl xl:text-lg'>
-              {siteConfig('POST_TITLE_ICON') && (
-                <NotionIcon
-                  icon={post.pageIcon}
-                  className="inline-block w-4 h-4 lg:w-6 lg:h-6 xl:w-5 xl:h-5 mr-1 align-middle transform translate-y-[-8%]"
-                />
+            {/* 文字内容层 */}
+            <div className='relative z-10 h-full flex flex-col justify-end p-5'>
+              {/* 分类标签 */}
+              {post?.category && (
+                <div className='mb-2'>
+                  <span className='inline-block px-2 py-1 text-xs font-semibold text-white bg-indigo-600 dark:bg-yellow-500 rounded-full shadow-lg'>
+                    {post.category}
+                  </span>
+                </div>
               )}
-              <span className='menu-link'>{post.title}</span>
-            </SmartLink>
-          </header>
 
-          {/* 摘要 */}
-          {(!showPreview || showSummary) && (
-            <main className='line-clamp-2 lg:line-clamp-2 xl:line-clamp-3 text-gray-700 dark:text-gray-300 font-light leading-tight
-            text-sm lg:text-sm xl:text-sm hidden lg:block'>
-              {post.summary}
-            </main>
+              {/* 标题 */}
+              <h2 className='text-white text-xl font-extrabold leading-tight mb-2 line-clamp-2 group-hover:text-indigo-300 dark:group-hover:text-yellow-300 transition-colors drop-shadow-lg'>
+                {siteConfig('POST_TITLE_ICON') && (
+                  <NotionIcon
+                    icon={post.pageIcon}
+                    className="inline-block w-5 h-5 mr-1 align-middle"
+                  />
+                )}
+                {post.title}
+              </h2>
+
+              {/* 摘要 */}
+              {(!showPreview || showSummary) && post.summary && (
+                <p className='text-gray-100 text-sm font-light leading-relaxed mb-2 line-clamp-2 drop-shadow'>
+                  {post.summary}
+                </p>
+              )}
+
+              {/* 标签组 */}
+              {post.tagItems && post.tagItems.length > 0 && (
+                <div className='flex flex-wrap gap-1.5'>
+                  {post.tagItems.slice(0, 4).map(tag => (
+                    <span 
+                      key={tag.name} 
+                      className='text-xs text-gray-200 bg-white/20 backdrop-blur-sm px-2 py-1 rounded hover:bg-white/30 transition-colors'>
+                      #{tag.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </SmartLink>
+      </div>
+
+      {/* 二列布局：上图下文 - 在中等屏幕显示 */}
+      <div className='hidden lg:block xl:hidden'>
+        <div
+          data-wow-delay='.2s'
+          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-[23rem]'>
+          
+          {/* 图片封面 */}
+          {showPageCover && (
+            <SmartLink href={post?.href} passHref legacyBehavior>
+              <div className='w-full h-48 overflow-hidden cursor-pointer select-none'>
+                <LazyImage
+                  priority={index === 0}
+                  src={post?.pageCoverThumbnail}
+                  alt={post?.title}
+                  className='h-full w-full object-cover group-hover:scale-105 group-hover:brightness-75 transition-all duration-500 ease-in-out'
+                />
+              </div>
+            </SmartLink>
           )}
 
-          <div className='flex-wrap justify-start inline-block hidden lg:flex'>
-            <div>
-              {post.tagItems?.slice(0, 3).map(tag => (
-                <TagItemMini key={tag.name} tag={tag} />
-              ))}
+          {/* 文字区块 */}
+          <div className='flex p-6 flex-col justify-between flex-1'>
+            <header>
+              {/* 分类 */}
+              {post?.category && (
+                <div className='flex mb-1 items-center justify-start flex-wrap dark:text-gray-300 text-gray-600 hover:text-indigo-700 dark:hover:text-yellow-500'>
+                  <SmartLink
+                    passHref
+                    href={`/category/${post.category}`}
+                    className='cursor-pointer text-xs font-normal menu-link'>
+                    {post.category}
+                  </SmartLink>
+                </div>
+              )}
+
+              {/* 标题和图标 */}
+              <SmartLink
+                href={post?.href}
+                passHref
+                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-xl font-extrabold leading-tight'>
+                {siteConfig('POST_TITLE_ICON') && (
+                  <NotionIcon
+                    icon={post.pageIcon}
+                    className="heo-icon w-6 h-6 mr-1 align-middle transform translate-y-[-8%]"
+                  />
+                )}
+                <span className='menu-link'>{post.title}</span>
+              </SmartLink>
+            </header>
+
+            {/* 摘要 */}
+            {(!showPreview || showSummary) && (
+              <main className='line-clamp-2 replace text-gray-700 dark:text-gray-300 text-sm font-light leading-tight'>
+                {post.summary}
+              </main>
+            )}
+
+            {/* 标签 */}
+            <div className='flex-wrap justify-start inline-block'>
+              <div>
+                {post.tagItems?.map(tag => (
+                  <TagItemMini key={tag.name} tag={tag} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* 三列布局：书籍样式上图下文 - 在超大屏幕显示 */}
+      <div className='hidden xl:block'>
+        <div
+          data-wow-delay='.2s'
+          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-96'>
+          
+          {/* 图片封面 */}
+          {showPageCover && (
+            <SmartLink href={post?.href} passHref legacyBehavior>
+              <div className='w-full h-48 overflow-hidden cursor-pointer select-none'>
+                <LazyImage
+                  priority={index === 0}
+                  src={post?.pageCoverThumbnail}
+                  alt={post?.title}
+                  className='h-full w-full object-cover group-hover:scale-105 group-hover:brightness-75 transition-all duration-500 ease-in-out'
+                />
+              </div>
+            </SmartLink>
+          )}
+
+          {/* 文字区块 */}
+          <div className='flex p-5 flex-col justify-between flex-1'>
+            <header>
+              {/* 分类 */}
+              {post?.category && (
+                <div className='flex mb-1 items-center justify-start flex-wrap dark:text-gray-300 text-gray-600 hover:text-indigo-700 dark:hover:text-yellow-500'>
+                  <SmartLink
+                    passHref
+                    href={`/category/${post.category}`}
+                    className='cursor-pointer text-xs font-normal menu-link'>
+                    {post.category}
+                  </SmartLink>
+                </div>
+              )}
+
+              {/* 标题和图标 */}
+              <SmartLink
+                href={post?.href}
+                passHref
+                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-lg font-extrabold leading-tight'>
+                {siteConfig('POST_TITLE_ICON') && (
+                  <NotionIcon
+                    icon={post.pageIcon}
+                    className="heo-icon w-5 h-5 mr-1 align-middle transform translate-y-[-8%]"
+                  />
+                )}
+                <span className='menu-link'>{post.title}</span>
+              </SmartLink>
+            </header>
+
+            {/* 摘要 */}
+            {(!showPreview || showSummary) && (
+              <main className='line-clamp-3 replace text-gray-700 dark:text-gray-300 text-sm font-light leading-tight'>
+                {post.summary}
+              </main>
+            )}
+
+            {/* 标签 */}
+            <div className='flex-wrap justify-start inline-block mt-auto'>
+              <div>
+                {post.tagItems?.map(tag => (
+                  <TagItemMini key={tag.name} tag={tag} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </article>
   )
 }
