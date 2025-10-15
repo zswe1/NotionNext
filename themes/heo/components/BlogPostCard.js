@@ -34,7 +34,8 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         <SmartLink href={post?.href} passHref legacyBehavior>
           <div
             data-wow-delay='.2s'
-            className='relative wow fadeInUp border dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl cursor-pointer h-80 mb-4 group'>
+            className='relative wow fadeInUp border dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl cursor-pointer mb-4 group h-64'>
+            {/* 👆 这里的 h-64 可以改成 h-56 (224px) 或 h-72 (288px) 来调整卡片高度 */}
             
             {/* 背景图片层 */}
             {showPageCover && (
@@ -74,7 +75,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
               {/* 摘要 */}
               {(!showPreview || showSummary) && post.summary && (
-                <p className='text-gray-100 text-sm font-light leading-relaxed mb-2 line-clamp-2 drop-shadow'>
+                <p className='text-gray-100 text-sm font-light leading-relaxed mb-2 line-clamp-1 drop-shadow'>
                   {post.summary}
                 </p>
               )}
@@ -96,16 +97,18 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         </SmartLink>
       </div>
 
-      {/* 二列布局：上图下文 - 在中等屏幕显示 */}
+      {/* 二列布局：传统上图下文分离布局 - 在中等屏幕显示 */}
       <div className='hidden lg:block xl:hidden'>
         <div
           data-wow-delay='.2s'
-          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-[23rem]'>
+          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-80'>
+          {/* 👆 这里的 h-80 (320px) 可以改成 h-72 (288px) 或 h-96 (384px) 来调整卡片总高度 */}
           
-          {/* 图片封面 */}
+          {/* 图片封面 - 占卡片高度的50% */}
           {showPageCover && (
             <SmartLink href={post?.href} passHref legacyBehavior>
-              <div className='w-full h-48 overflow-hidden cursor-pointer select-none'>
+              <div className='w-full h-40 overflow-hidden cursor-pointer select-none flex-shrink-0'>
+                {/* 👆 这里的 h-40 (160px) 控制图片高度，可以改成 h-36 (144px) 或 h-44 (176px) 或 h-48 (192px) */}
                 <LazyImage
                   priority={index === 0}
                   src={post?.pageCoverThumbnail}
@@ -116,8 +119,8 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             </SmartLink>
           )}
 
-          {/* 文字区块 */}
-          <div className='flex p-6 flex-col justify-between flex-1'>
+          {/* 文字区块 - 自动填充剩余空间 */}
+          <div className='flex p-5 flex-col justify-between flex-1'>
             <header>
               {/* 分类 */}
               {post?.category && (
@@ -135,11 +138,11 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
               <SmartLink
                 href={post?.href}
                 passHref
-                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-xl font-extrabold leading-tight'>
+                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-lg font-extrabold leading-tight'>
                 {siteConfig('POST_TITLE_ICON') && (
                   <NotionIcon
                     icon={post.pageIcon}
-                    className="heo-icon w-6 h-6 mr-1 align-middle transform translate-y-[-8%]"
+                    className="heo-icon w-5 h-5 mr-1 align-middle transform translate-y-[-8%]"
                   />
                 )}
                 <span className='menu-link'>{post.title}</span>
@@ -154,7 +157,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
             )}
 
             {/* 标签 */}
-            <div className='flex-wrap justify-start inline-block'>
+            <div className='flex-wrap justify-start inline-block mt-auto'>
               <div>
                 {post.tagItems?.map(tag => (
                   <TagItemMini key={tag.name} tag={tag} />
@@ -165,16 +168,18 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
         </div>
       </div>
 
-      {/* 三列布局：书籍样式上图下文 - 在超大屏幕显示 */}
+      {/* 三列布局：传统上图下文分离布局 - 在超大屏幕显示 */}
       <div className='hidden xl:block'>
         <div
           data-wow-delay='.2s'
-          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-96'>
+          className='wow fadeInUp border bg-white dark:bg-[#1e1e1e] mb-4 flex flex-col group w-full dark:border-gray-600 hover:border-indigo-600 dark:hover:border-yellow-600 duration-300 transition-colors overflow-hidden rounded-xl h-[26rem]'>
+          {/* 👆 这里的 h-[26rem] (416px) 可以改成 h-96 (384px) 或 h-[28rem] (448px) 来调整卡片总高度 */}
           
           {/* 图片封面 */}
           {showPageCover && (
             <SmartLink href={post?.href} passHref legacyBehavior>
-              <div className='w-full h-48 overflow-hidden cursor-pointer select-none'>
+              <div className='w-full h-52 overflow-hidden cursor-pointer select-none flex-shrink-0'>
+                {/* 👆 这里的 h-52 (208px) 控制图片高度，可以改成 h-48 (192px) 或 h-56 (224px) */}
                 <LazyImage
                   priority={index === 0}
                   src={post?.pageCoverThumbnail}
@@ -204,11 +209,11 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
               <SmartLink
                 href={post?.href}
                 passHref
-                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-lg font-extrabold leading-tight'>
+                className='group-hover:text-indigo-700 dark:hover:text-yellow-700 dark:group-hover:text-yellow-600 text-black dark:text-gray-100 line-clamp-2 replace cursor-pointer text-base font-extrabold leading-tight'>
                 {siteConfig('POST_TITLE_ICON') && (
                   <NotionIcon
                     icon={post.pageIcon}
-                    className="heo-icon w-5 h-5 mr-1 align-middle transform translate-y-[-8%]"
+                    className="heo-icon w-4 h-4 mr-1 align-middle transform translate-y-[-8%]"
                   />
                 )}
                 <span className='menu-link'>{post.title}</span>
